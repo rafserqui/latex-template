@@ -1,11 +1,11 @@
 % Add space in lists
 \let\toneitemize\itemize
 \let\ttwoitemize\enditemize
-\renewenvironment{itemize}{\toneitemize\addtolength{\itemsep}{1.35\baselineskip}}{\ttwoitemize}
+\renewenvironment{itemize}{\toneitemize\addtolength{\itemsep}{1.1\baselineskip}}{\ttwoitemize}
 
 \let\toneenumer\enumerate
 \let\ttwoenumer\endenumerate
-\renewenvironment{enumerate}{\toneenumer\addtolength{\itemsep}{1.35\baselineskip}}{\ttwoenumer}
+\renewenvironment{enumerate}{\toneenumer\addtolength{\itemsep}{1.1\baselineskip}}{\ttwoenumer}
 
 % Itemize w bullets
 \setbeamertemplate{itemize items}{$\circ$}
@@ -16,9 +16,11 @@
 %===========================================================
 % Color specifications
 %===========================================================
-\definecolor{LightBlue}{HTML}{0494e7}  % Headings color
+\definecolor{LightBlue}{HTML}{0494e7}       % Headings color
 \definecolor{CitationsBlue}{HTML}{2B6684} 	% Color for citations
 \definecolor{LinksPink}{HTML}{ff0054}       % Color for links
+\definecolor{LinksGreen}{HTML}{3a9d23}      % Color for links
+\definecolor{AlertOrange}{HTML}{e63946}     % Color for alerts
 
 % Template for syntax highlighting
 \definecolor{BeigeBackground}{HTML}{fdf6e3}
@@ -32,7 +34,7 @@
 \setbeamercolor{section in toc}{fg=LightBlue} % TOC sections
 \setbeamercolor{background canvas}{bg=white}
 \setbeamercolor{button}{bg=white, fg=LightBlue}
-\setbeamercolor{alerted text}{fg=LightBlue}
+\setbeamercolor{alerted text}{fg=AlertOrange}
 
 %===========================================================
 % Numeration in environments
@@ -72,9 +74,9 @@
     pdfsubject={Introduction to Matlab},
     colorlinks = {true},
     linkcolor = {LightBlue},
-    citecolor = {LinksPink},
-    urlcolor = {LinksPink},
-    filecolor = {LinksPink}
+    citecolor = {LinksGreen},
+    urlcolor = {LinksGreen},
+    filecolor = {LinksGreen}
 }
 %===========================================================
 % Additional packages
@@ -225,16 +227,11 @@
     \theoremstyle{plain}
     \newtheorem{assumption}{Assumption}
 
+    \theoremstyle{plain}
+    \newtheorem{remark}{Remark}
+
     \newtheorem{proposition}{\translate{Proposition}}
     % Compatibility
-    \newtheorem{Beispiel}{Beispiel}
-    \newtheorem{Beispiele}{Beispiele}
-    \theoremstyle{plain}
-    \newtheorem{Loesung}{L\"osung}
-    \newtheorem{Satz}{Satz}
-    \newtheorem{Folgerung}{Folgerung}
-    \newtheorem{Fakt}{Fakt}
-    \newenvironment{Beweis}{\begin{proof}[Beweis.]}{\end{proof}}
     \newenvironment{Lemma}{\begin{lemma}}{\end{lemma}}
     \newenvironment{Proof}{\begin{proof}}{\end{proof}}
     \newenvironment{Theorem}{\begin{theorem}}{\end{theorem}}
