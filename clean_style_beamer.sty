@@ -1,14 +1,17 @@
 % Add space in lists
 \let\toneitemize\itemize
 \let\ttwoitemize\enditemize
-\renewenvironment{itemize}{\toneitemize\addtolength{\itemsep}{1.1\baselineskip}}{\ttwoitemize}
+\renewenvironment{itemize}{\toneitemize\addtolength{\itemsep}{0.8\baselineskip}}{\ttwoitemize}
 
 \let\toneenumer\enumerate
 \let\ttwoenumer\endenumerate
-\renewenvironment{enumerate}{\toneenumer\addtolength{\itemsep}{1.1\baselineskip}}{\ttwoenumer}
+\renewenvironment{enumerate}{\toneenumer\addtolength{\itemsep}{0.8\baselineskip}}{\ttwoenumer}
 
 % Itemize w bullets
-\setbeamertemplate{itemize items}{$\circ$}
+\usepackage{fontawesome5}
+\setbeamertemplate{itemize items}{\faDotCircle[regular]}
+\setbeamertemplate{itemize subitem}{\faSquare[regular]}
+\setbeamertemplate{itemize subsubitem}{\faLongArrowAltRight}
 
 % Font size of title
 \setbeamerfont{title}{size=\huge}
@@ -16,25 +19,25 @@
 %===========================================================
 % Color specifications
 %===========================================================
-\definecolor{LightBlue}{HTML}{0494e7}       % Headings color
-\definecolor{CitationsBlue}{HTML}{2B6684} 	% Color for citations
-\definecolor{LinksPink}{HTML}{ff0054}       % Color for links
-\definecolor{LinksGreen}{HTML}{3a9d23}      % Color for links
-\definecolor{AlertOrange}{HTML}{e63946}     % Color for alerts
+\definecolor{MainColor}{HTML}{0077b6}
+\definecolor{LinkColor}{HTML}{8338ec}
+\definecolor{CitationsColor}{HTML}{B50045}
+\definecolor{LightGray}{HTML}{818FB4}
+\definecolor{DiscreteCitation}{HTML}{3E3D40}
 
 % Template for syntax highlighting
 \definecolor{BeigeBackground}{HTML}{fdf6e3}
 \definecolor{BlueKeyWord}{HTML}{268bd2}
 
-\setbeamercolor{palette primary}{bg=LightBlue,fg=white}
-\setbeamercolor{palette secondary}{bg=LightBlue,fg=white}
-\setbeamercolor{palette tertiary}{bg=LightBlue,fg=white}
-\setbeamercolor{palette quaternary}{bg=LightBlue,fg=white}
-\setbeamercolor{structure}{fg=LightBlue} % itemize, enumerate, etc
-\setbeamercolor{section in toc}{fg=LightBlue} % TOC sections
+\setbeamercolor{palette primary}{bg=MainColor,fg=white}
+\setbeamercolor{palette secondary}{bg=MainColor,fg=white}
+\setbeamercolor{palette tertiary}{bg=MainColor,fg=white}
+\setbeamercolor{palette quaternary}{bg=MainColor,fg=white}
+\setbeamercolor{structure}{fg=MainColor} % itemize, enumerate, etc
+\setbeamercolor{section in toc}{fg=MainColor} % TOC sections
 \setbeamercolor{background canvas}{bg=white}
-\setbeamercolor{button}{bg=white, fg=LightBlue}
-\setbeamercolor{alerted text}{fg=AlertOrange}
+\setbeamercolor{button}{bg=white, fg=MainColor}
+\setbeamercolor{alerted text}{fg=MainColor}
 
 %===========================================================
 % Numeration in environments
@@ -47,15 +50,17 @@
 \usepackage{appendixnumberbeamer}
 
 %===========================================================
-% Language and font settings
+% Fonts
 %===========================================================
-\usepackage[english,activeacute]{babel} % Language
-\usefonttheme{serif}
+\usefonttheme{professionalfonts}
+\usepackage[T1]{fontenc}
+\usepackage{inputenc}
 
-\usepackage{cochineal}
-\usepackage[utf8]{inputenc}				% Special symbols
-\usepackage[T1]{fontenc}				% T1 Encoding of font
-\usepackage{csquotes}
+%\usepackage[sfdefault,light]{FiraSans}
+\usepackage[default,regular,osf]{sourceserifpro}
+
+% --- Mono font --- %
+\renewcommand*{\ttdefault}{lmvtt}
 
 %===========================================================
 % Math font settings
@@ -70,20 +75,18 @@
 \usepackage{hyperref}
 \hypersetup
 {
-    pdfauthor={Rafael Serrano Quintero},
-    pdfsubject={Introduction to Matlab},
+    pdfauthor={},
+    pdfsubject={},
     colorlinks = {true},
-    linkcolor = {LightBlue},
-    citecolor = {LinksGreen},
-    urlcolor = {LinksGreen},
-    filecolor = {LinksGreen}
+    linkcolor = {MainColor},
+    citecolor = {CitationsColor},
+    urlcolor = {LinkColor},
+    filecolor = {LinkColor}
 }
 %===========================================================
 % Additional packages
 %===========================================================
 \usepackage{graphicx}
-\usepackage{tikz}
-\usetikzlibrary{decorations.markings}
 
 \usepackage{longtable}
 \usepackage{appendix}
@@ -93,8 +96,10 @@
 
 \usepackage[style = authoryear,
         natbib=true,
+        maxcitenames=2,
+        uniquelist=false,
         backend=biber]{biblatex}
-\newcommand{\mkbibbracketscol}[1]{\textcolor{LinksPink}{\mkbibbrackets{#1}}}
+\newcommand{\mkbibbracketscol}[1]{\textcolor{CitationsColor}{\mkbibbrackets{#1}}}
 
 \renewbibmacro*{cite}{%
   \printtext[bibhyperref]{%
@@ -137,24 +142,14 @@
        {}%
      \usebibmacro{citeyear}}}
 
-\renewbibmacro*{cite:shorthand}{%
-  \printfield{shorthand}}
-
-\renewbibmacro*{cite:label}{%
-  \iffieldundef{label}
-    {\printfield[citetitle]{labeltitle}}
-    {\printfield{label}}}
-
-\renewbibmacro*{cite:labeldate+extradate}{%
-  \printlabeldateextra}
-
-% \DeclareCiteCommand{\parencite}[\mkbibbracketscol]
-%   {\usebibmacro{prenote}}
-%   {\usebibmacro{citeindex}%
-%    \usebibmacro{cite}}
-%   {\multicitedelim}
-%   {\usebibmacro{postnote}}
-
+\newcommand{\smallcite}[1]{%
+  {\footnotesize%
+   \begingroup
+     \hypersetup{citecolor=DiscreteCitation} % Local override
+     [#1]
+   \endgroup
+  }%
+}
 
 \usepackage[flushleft]{threeparttable}
 \usepackage{booktabs}
@@ -227,11 +222,16 @@
     \theoremstyle{plain}
     \newtheorem{assumption}{Assumption}
 
-    \theoremstyle{plain}
-    \newtheorem{remark}{Remark}
-
     \newtheorem{proposition}{\translate{Proposition}}
     % Compatibility
+    \newtheorem{Beispiel}{Beispiel}
+    \newtheorem{Beispiele}{Beispiele}
+    \theoremstyle{plain}
+    \newtheorem{Loesung}{L\"osung}
+    \newtheorem{Satz}{Satz}
+    \newtheorem{Folgerung}{Folgerung}
+    \newtheorem{Fakt}{Fakt}
+    \newenvironment{Beweis}{\begin{proof}[Beweis.]}{\end{proof}}
     \newenvironment{Lemma}{\begin{lemma}}{\end{lemma}}
     \newenvironment{Proof}{\begin{proof}}{\end{proof}}
     \newenvironment{Theorem}{\begin{theorem}}{\end{theorem}}
@@ -270,7 +270,9 @@
 \setbeamertemplate{section page}[mine]
 \setbeamertemplate{subsection page}[mine_sub]
 
-% Larger dot derivative
-\usepackage{accents}
-\newcommand*{\dt}[1]{%
-  \accentset{\mbox{\large\bfseries .}}{#1}}
+%===========================================================
+% Beamer Buttons
+%===========================================================
+\setbeamercolor{button}{bg = white}
+\setbeamerfont{button}{family = \ttfamily}
+\setbeamercolor{button border}{fg = MainColor}
