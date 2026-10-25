@@ -1,0 +1,223 @@
+% Override DesignTestOptions to test another class size/aspect ratio/notheorems.
+\providecommand{\DesignTestOptions}{10pt,aspectratio=169}
+\documentclass[\DesignTestOptions,xcolor={svgnames}]{beamer}
+\usepackage{clean_style_beamer}
+\addbibresource{beamer_design_test.bib}
+\pdfstringdefDisableCommands{\def\translate#1{#1}}
+
+\title[Design proof]{A Shared Design for Research and Evidence}
+\subtitle[Shared style]{Typography, emphasis, and reusable elements}
+\author[A. Researcher et al.]{Alexandra Researcher\inst{1} \and
+  Benjamin Collaborator\inst{2} \and Cecilia Investigator\inst{1} \and
+  Daniel Scholar\inst{3}}
+\institute[Research institutes]{\inst{1} Research Institute \quad
+  \inst{2} University of Social Sciences \quad \inst{3} Policy Centre}
+\date[25 Oct 2026]{25 October 2026}
+
+\makeatletter
+\newcommand{\AssertListSpacing}{%
+  \begingroup
+    \dimen@=\itemsep
+    \csname @list\romannumeral\@listdepth\endcsname
+    \addtolength{\itemsep}{0.8\baselineskip}%
+    \ifdim\dimen@=\itemsep\else
+      \PackageError{beamer_design_test}{Incorrect list spacing}{Spacing must be added once at the current list font size.}%
+    \fi
+  \endgroup}
+\@for\TestEnvironment:=theorem,corollary,fact,lemma,problem,solution,definition,definitions,example,examples,exercise,assumption,proposition,Beispiel,Beispiele,Loesung,Satz,Folgerung,Fakt,Beweis,Lemma,Proof,Theorem,Problem,Corollary,Example,Examples,Definition,mblock\do{%
+  \@ifundefined{\TestEnvironment}{%
+    \PackageError{beamer_design_test}{Missing environment \TestEnvironment}{All public environments must remain available.}}{}}
+\makeatother
+
+\begin{document}
+\maketitle
+
+\section{Typography and Emphasis}
+
+\begin{frame}{Typography and Semantic Sizes}
+  Ordinary body text uses the current Source Serif family.
+  Proportional old-style numerals: 0123456789.
+  \begin{itemize}
+    \item Regular, \textbf{bold}, \textit{italic}, and \textbf{\textit{bold italic}}.
+    \item \tbf{Blue bold emphasis} and \alert{coral alert text} are distinct.
+      \begin{itemize}
+        \item Nested text follows the class-relative size hierarchy.
+      \end{itemize}
+  \end{itemize}
+  \smallcite{\textcite{smith2020}}\quad
+  \hyperlink{buttons}{\beamergotobutton{Buttons and links}}
+\end{frame}
+
+\begin{frame}{Nested Lists and Overlays}
+  \begin{itemize}[<+->]
+    \AssertListSpacing
+    \item First-level dot-circle; text and marker use relative list layout.
+      \begin{itemize}[<.->]
+        \AssertListSpacing
+        \item Second-level solid long arrow in a fixed-width icon box.
+          \begin{itemize}[<.->]
+            \AssertListSpacing
+            \item The existing third-level marker is preserved.
+          \end{itemize}
+        \AssertListSpacing
+      \end{itemize}
+    \AssertListSpacing
+    \item Spacing and grouping survive the nested environment.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Numbered Lists and Optional Labels}
+  \begin{enumerate}[<+->][a)]
+    \AssertListSpacing
+    \item Custom alphabetic labels remain blue.
+      \begin{enumerate}[<.->][i)]
+        \AssertListSpacing
+        \item Nested numbering and overlay defaults are accepted.
+        \item The extra spacing is applied once.
+      \end{enumerate}
+    \AssertListSpacing
+    \item The outer counter continues after the nested list.
+  \end{enumerate}
+\end{frame}
+
+\subsection{Reusable Callouts}
+
+\begin{frame}{Shared Emphasis and Callout Helpers}
+  \begin{mblock}
+    \alert{\textbf{Research question:}} Can one shared preamble preserve a
+    clear visual hierarchy across presentations?
+  \end{mblock}
+  \begin{itemize}
+    \item \tbf{Reusable emphasis:} blue, bold serif text.
+    \item \alert{Alerts:} coral, with surrounding text staying black.
+    \item The callout retains its grey fill and rounded orange border.
+  \end{itemize}
+\end{frame}
+
+\section*{Starred Section Without an Automatic Divider}
+\begin{frame}{Starred Section Behaviour}
+  This frame follows a starred section directly. No automatic divider is
+  inserted for the starred section.
+\end{frame}
+
+\section{Theorems and Equations}
+
+\begin{frame}{A Numbered Proposition with an Optional Name}
+  \begin{proposition}<1->[An illustrative identity]
+    For every real number $x$, the following identity holds:
+    \begin{equation}\label{eq:identity}
+      (x+1)^2=x^2+2x+1.
+    \end{equation}
+    Plain-style theorem prose is italic; the heading is blue and numbered.
+  \end{proposition}
+  \begin{proof}
+    Expand the product $(x+1)(x+1)$.
+  \end{proof}
+\end{frame}
+
+\begin{frame}{Theorem Counters and Compatibility Aliases}
+  \begin{theorem}[First named result]
+    The native theorem counter remains available.
+  \end{theorem}
+  \begin{Lemma}[A compatible alias]
+    Existing aliases retain optional names and their underlying counters.
+  \end{Lemma}
+  \begin{proposition}[Second proposition]
+    Proposition numbering advances automatically.
+  \end{proposition}
+\end{frame}
+
+\begin{frame}{Definition and Example Semantics}
+  \begin{definition}[A reusable design]
+    A shared style supplies presentation-wide formatting.
+  \end{definition}
+  \begin{example}[Upright example prose]
+    Definitions and examples retain their normal theorem-style semantics.
+  \end{example}
+  \begin{assumption}
+    Assumptions retain plain-style italic prose.
+  \end{assumption}
+\end{frame}
+
+\section{References and Captions}
+
+\begin{frame}{Citation Names, Colours, and Local Grouping}
+  Ordinary author--year links: \textcite{smith2020,smith2021}.
+  \begin{itemize}
+    \item Reduced grey citation: \smallcite{\textcite{smith2020}}.
+    \item Ordinary links return to magenta: \citep{smith2021}.
+    \item Three authors are shortened: \citet{adams2022}.
+    \item Author and year commands: \citeauthor{smith2020},
+      \citeyearpar{smith2020}.
+  \end{itemize}
+  Surnames stay compact even when authors share a surname.
+\end{frame}
+
+\begin{frame}{Numbered Figures and Subcaptions}
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.45\linewidth}
+      \centering\fbox{\strut First panel}
+      \caption{First descriptive panel caption.}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.45\linewidth}
+      \centering\fbox{\strut Second panel}
+      \caption{Second descriptive panel caption.}
+    \end{subfigure}
+    \caption{A deliberately long figure caption that wraps naturally within
+      its containing width while keeping its numbered label blue and its
+      descriptive text black.}\label{fig:panels}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Booktabs Table with a Numbered Caption}
+  \begin{table}
+    \caption{An illustrative table with automatic numbering.}\label{tab:sample}
+    \centering
+    \begin{tabular}{lrr}
+      \toprule
+      Group & Baseline & Alternative \\
+      \midrule
+      Primary & 12.3 & 14.5 \\
+      Secondary & 23.4 & 25.6 \\
+      Tertiary & 34.5 & 36.7 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  Table text retains the ordinary class-relative body size.
+\end{frame}
+
+\begin{frame}[label=buttons]{Buttons and Hyperlinks}
+  \hyperlink{appendix-proof}{\beamergotobutton{Appendix details}}\quad
+  \hyperlink{appendix-proof}{\beamerreturnbutton{Return-style button}}
+  \begin{itemize}
+    \item Buttons have white fill, blue text/borders, and tiny monospace labels.
+    \item External URL: \href{https://example.org}{example.org}.
+    \item Local reference: equation~\eqref{eq:identity}.
+    \item Figure~\ref{fig:panels} and table~\ref{tab:sample} use automatic counters.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Existing Code Listing Support}
+\begin{lstlisting}
+% An illustrative Matlab calculation
+x = ones(2, 1);
+y = factorial(3) * x;
+\end{lstlisting}
+  Listing colours and monospace behaviour retain their existing settings.
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Bibliography}
+  \printbibliography[heading=none]
+\end{frame}
+
+\appendix
+\section{Appendix}
+\begin{frame}[label=appendix-proof]{Appendix and Return Navigation}
+  Appendix-numbering support remains active with no visible slide numbers.
+  \begin{equation}
+    \mathbb{E}[X]=\int_{\mathbb{R}} x f(x)\,\mathrm{d}x.
+  \end{equation}
+  \hyperlink{buttons}{\beamerreturnbutton{Return to buttons}}
+\end{frame}
+\end{document}

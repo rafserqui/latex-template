@@ -1,16 +1,19 @@
-% Add space in lists
-\let\toneitemize\itemize
-\let\ttwoitemize\enditemize
-\renewenvironment{itemize}{\toneitemize\addtolength{\itemsep}{0.8\baselineskip}}{\ttwoitemize}
-
-\let\toneenumer\enumerate
-\let\ttwoenumer\endenumerate
-\renewenvironment{enumerate}{\toneenumer\addtolength{\itemsep}{0.8\baselineskip}}{\ttwoenumer}
+% Add spacing after Beamer has parsed list options and selected the list font.
+\makeatletter
+\expandafter\patchcmd\csname\string\itemize\endcsname
+  {\beamer@cramped}
+  {\beamer@cramped\addtolength{\itemsep}{0.8\baselineskip}}
+  {}{\PackageError{clean_style_beamer}{Cannot patch itemize spacing}{Check the Beamer list implementation.}}
+\patchcmd{\beamer@enum@}
+  {\beamer@cramped}
+  {\beamer@cramped\addtolength{\itemsep}{0.8\baselineskip}}
+  {}{\PackageError{clean_style_beamer}{Cannot patch enumerate spacing}{Check the Beamer list implementation.}}
+\makeatother
 
 % Itemize w bullets
-\usepackage{fontawesome5}
+\usepackage[fixed]{fontawesome5}
 \setbeamertemplate{itemize items}{\faDotCircle[regular]}
-\setbeamertemplate{itemize subitem}{\faSquare[regular]}
+\setbeamertemplate{itemize subitem}{\faLongArrowAltRight}
 \setbeamertemplate{itemize subsubitem}{\faLongArrowAltRight}
 
 % Font size of title
@@ -24,6 +27,8 @@
 \definecolor{CitationsColor}{HTML}{B50045}
 \definecolor{LightGray}{HTML}{818FB4}
 \definecolor{DiscreteCitation}{HTML}{3E3D40}
+\definecolor{AlertColor}{HTML}{FE5F55}
+\definecolor{BorderColor}{HTML}{E4572E}
 
 % Template for syntax highlighting
 \definecolor{BeigeBackground}{HTML}{fdf6e3}
@@ -37,7 +42,12 @@
 \setbeamercolor{section in toc}{fg=MainColor} % TOC sections
 \setbeamercolor{background canvas}{bg=white}
 \setbeamercolor{button}{bg=white, fg=MainColor}
-\setbeamercolor{alerted text}{fg=MainColor}
+\setbeamercolor{alerted text}{fg=AlertColor}
+
+\providecommand{\tbf}[1]{{\color{MainColor}\bfseries #1}}
+\usepackage{tcolorbox}
+\newtcolorbox{mblock}{colback=gray!10,
+    colframe=BorderColor, boxsep=1pt, arc=2pt}
 
 %===========================================================
 % Numeration in environments
@@ -57,7 +67,9 @@
 \usepackage{inputenc}
 
 %\usepackage[sfdefault,light]{FiraSans}
-\usepackage[default,regular,osf]{sourceserifpro}
+% mathpazo also sets the text family, so select Source Serif afterward.
+\usepackage{mathpazo}
+\usepackage[default,regular,osf]{sourceserif}
 
 % --- Mono font --- %
 \renewcommand*{\ttdefault}{lmvtt}
@@ -65,7 +77,6 @@
 %===========================================================
 % Math font settings
 %===========================================================
-\usepackage{mathpazo}					% Math font
 \usepackage{amsmath,amsfonts,amssymb}	% Math symbols
 \usepackage{dsfont}						% Math symbols like R for reals...
 
@@ -98,6 +109,7 @@
         natbib=true,
         maxcitenames=2,
         uniquelist=false,
+        uniquename=false,
         backend=biber]{biblatex}
 \newcommand{\mkbibbracketscol}[1]{\textcolor{CitationsColor}{\mkbibbrackets{#1}}}
 
@@ -157,6 +169,7 @@
 \usepackage{float}
 \usepackage{caption}
 \usepackage{subcaption}
+\captionsetup{justification=centering}
 \usepackage{multicol}
 
 %========================================================================================
@@ -195,51 +208,56 @@
 \lstset{style=MyMatlabStyle, basicstyle=\small\ttfamily}
 
 
-\setbeamertemplate{theorem}[ams style]
 \setbeamertemplate{theorems}[numbered]
 
+% Keep example theorem headings blue without changing ordinary example blocks.
+\addtobeamertemplate{theorem begin}{\setbeamercolor{block title example}{fg=MainColor}}{}
+
 \makeatletter
+    \theoremstyle{plain}
+    \@ifundefined{theorem}{%
     \ifbeamer@countsect
       \newtheorem{theorem}{\translate{Theorem}}[section]
     \else
       \newtheorem{theorem}{\translate{Theorem}}
     \fi
-    \newtheorem{corollary}{\translate{Corollary}}
-    \newtheorem{fact}{\translate{Fact}}
-    \newtheorem{lemma}{\translate{Lemma}}
-    \newtheorem{problem}{\translate{Problem}}
-    \newtheorem{solution}{\translate{Solution}}
+    }{}
+    \@ifundefined{corollary}{\newtheorem{corollary}{\translate{Corollary}}}{}
+    \@ifundefined{fact}{\newtheorem{fact}{\translate{Fact}}}{}
+    \@ifundefined{lemma}{\newtheorem{lemma}{\translate{Lemma}}}{}
+    \@ifundefined{problem}{\newtheorem{problem}{\translate{Problem}}}{}
+    \@ifundefined{solution}{\newtheorem{solution}{\translate{Solution}}}{}
 
     \theoremstyle{definition}
-    \newtheorem{definition}{\translate{Definition}}
-    \newtheorem{definitions}{\translate{Definitions}}
+    \@ifundefined{definition}{\newtheorem{definition}{\translate{Definition}}}{}
+    \@ifundefined{definitions}{\newtheorem{definitions}{\translate{Definitions}}}{}
 
     \theoremstyle{example}
-    \newtheorem{example}{\translate{Example}}
-    \newtheorem{examples}{\translate{Examples}}
-    \newtheorem{exercise}{Exercise}
+    \@ifundefined{example}{\newtheorem{example}{\translate{Example}}}{}
+    \@ifundefined{examples}{\newtheorem{examples}{\translate{Examples}}}{}
+    \@ifundefined{exercise}{\newtheorem{exercise}{Exercise}}{}
 
     \theoremstyle{plain}
-    \newtheorem{assumption}{Assumption}
+    \@ifundefined{assumption}{\newtheorem{assumption}{Assumption}}{}
 
-    \newtheorem{proposition}{\translate{Proposition}}
+    \@ifundefined{proposition}{\newtheorem{proposition}{\translate{Proposition}}}{}
     % Compatibility
-    \newtheorem{Beispiel}{Beispiel}
-    \newtheorem{Beispiele}{Beispiele}
+    \@ifundefined{Beispiel}{\newtheorem{Beispiel}{Beispiel}}{}
+    \@ifundefined{Beispiele}{\newtheorem{Beispiele}{Beispiele}}{}
     \theoremstyle{plain}
-    \newtheorem{Loesung}{L\"osung}
-    \newtheorem{Satz}{Satz}
-    \newtheorem{Folgerung}{Folgerung}
-    \newtheorem{Fakt}{Fakt}
-    \newenvironment{Beweis}{\begin{proof}[Beweis.]}{\end{proof}}
-    \newenvironment{Lemma}{\begin{lemma}}{\end{lemma}}
-    \newenvironment{Proof}{\begin{proof}}{\end{proof}}
-    \newenvironment{Theorem}{\begin{theorem}}{\end{theorem}}
-    \newenvironment{Problem}{\begin{problem}}{\end{problem}}
-    \newenvironment{Corollary}{\begin{corollary}}{\end{corollary}}
-    \newenvironment{Example}{\begin{example}}{\end{example}}
-    \newenvironment{Examples}{\begin{examples}}{\end{examples}}
-    \newenvironment{Definition}{\begin{definition}}{\end{definition}}
+    \@ifundefined{Loesung}{\newtheorem{Loesung}{L\"osung}}{}
+    \@ifundefined{Satz}{\newtheorem{Satz}{Satz}}{}
+    \@ifundefined{Folgerung}{\newtheorem{Folgerung}{Folgerung}}{}
+    \@ifundefined{Fakt}{\newtheorem{Fakt}{Fakt}}{}
+    \@ifundefined{Beweis}{\newenvironment{Beweis}{\begin{proof}[Beweis.]}{\end{proof}}}{}
+    \@ifundefined{Lemma}{\newenvironment{Lemma}{\begin{lemma}}{\end{lemma}}}{}
+    \@ifundefined{Proof}{\newenvironment{Proof}{\begin{proof}}{\end{proof}}}{}
+    \@ifundefined{Theorem}{\newenvironment{Theorem}{\begin{theorem}}{\end{theorem}}}{}
+    \@ifundefined{Problem}{\newenvironment{Problem}{\begin{problem}}{\end{problem}}}{}
+    \@ifundefined{Corollary}{\newenvironment{Corollary}{\begin{corollary}}{\end{corollary}}}{}
+    \@ifundefined{Example}{\newenvironment{Example}{\begin{example}}{\end{example}}}{}
+    \@ifundefined{Examples}{\newenvironment{Examples}{\begin{examples}}{\end{examples}}}{}
+    \@ifundefined{Definition}{\newenvironment{Definition}{\begin{definition}}{\end{definition}}}{}
 \makeatother
 
 
