@@ -46,7 +46,7 @@
 
 \providecommand{\tbf}[1]{{\color{MainColor}\bfseries #1}}
 \usepackage{tcolorbox}
-\newtcolorbox{mblock}{colback=gray!10,
+\newtcolorbox{mblock}{colback=BorderColor!10,
     colframe=BorderColor, boxsep=1pt, arc=2pt}
 
 %===========================================================
@@ -171,6 +171,9 @@
 \usepackage{subcaption}
 \captionsetup{justification=centering}
 \usepackage{multicol}
+
+% Command for gray annotations
+\newcommand{\graytext}[1]{{\centering\footnotesize\textcolor{gray}{#1}\par}}
 
 %========================================================================================
 % Syntax highlighting for Matlab
